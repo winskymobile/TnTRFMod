@@ -13,8 +13,8 @@ public class ConfigEntry<T>
     };
 
     private T defaultValue;
-    private string key;
-    private string section;
+    internal string key;
+    internal string section;
 
     public T Value
     {
@@ -96,6 +96,7 @@ public class ConfigEntry<T>
 
 public static class ConfigEntry
 {
+    private const int ConfigReloadDebounceMs = 250;
     public static readonly TomlTable defaultConfig = new();
     public static TomlTable loadedConfig = new();
 
@@ -103,7 +104,6 @@ public static class ConfigEntry
 
     private static FileSystemWatcher? configFileWatcher;
     private static DateTime _lastConfigReload;
-    private const int ConfigReloadDebounceMs = 250;
 
     public static string ConfigFilePath => Path.Combine(TnTrfMod.Dir, "config.toml");
     public static string ExampleConfigFilePath => Path.Combine(TnTrfMod.Dir, "config.example.toml");

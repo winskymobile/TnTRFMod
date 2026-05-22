@@ -40,17 +40,19 @@ public class TnTrfMod
     public const string MOD_GUID = "net.stevexmh.TnTRFMod";
 
     private readonly Dictionary<string, HashSet<IScene>> _scenes = new();
-    private HarmonyInstance Harmony;
+    private HarmonyInstance? Harmony;
 
     private readonly MinimumLatencyAudioClient _minimumLatencyAudioClient = new();
 
+    private static bool _settingsUiInitialized;
+
     public static readonly string Dir = Path.GetFullPath(Path.Join(Application.dataPath, "../TnTRFMod"));
 
-    internal CoroutineRunner _runner;
+    internal CoroutineRunner? _runner;
 
-    public static TnTrfMod Instance { get; internal set; }
+    public static TnTrfMod? Instance { get; internal set; }
 
-    private string sceneName { get; set; }
+    private string? sceneName { get; set; }
 
     // "H:\SteamLibrary\steamapps\common\Taiko no Tatsujin Rhythm Festival\Taiko no Tatsujin Rhythm Festival_Data\Plugins\x86_64\LibTaiko.dll"
     [DllImport("Taiko no Tatsujin Rhythm Festival_Data/Plugins/x86_64/LibTaiko.dll", EntryPoint = "SetDebugLogFunc",
@@ -132,17 +134,17 @@ public class TnTrfMod
 
     public void StartCoroutine(IEnumerator routine)
     {
-        _runner.RunCoroutine(routine);
+        _runner!.RunCoroutine(routine);
     }
 
     public void StartCoroutine(Il2CppIEnumerator routine)
     {
-        _runner.RunCoroutine(routine);
+        _runner!.RunCoroutine(routine);
     }
 
     public void StartCoroutine(IEnumerable routine)
     {
-        _runner.RunCoroutine(ExecCoroutineWithIEnumerable(routine));
+        _runner!.RunCoroutine(ExecCoroutineWithIEnumerable(routine));
     }
 
     private static IEnumerator ExecCoroutineWithIEnumerable(IEnumerable routine)
@@ -167,7 +169,7 @@ public class TnTrfMod
         result &= PatchClass<AutoDownloadSubscriptionSongs>(ModConfig.EnableAutoDownloadSubscriptionSongs);
         result &= PatchClass<EnsoGameBasePatch>();
         result &= PatchClass<LibTaikoPatches>();
-        // result &= PatchClass<SmoothEnsoGamePatch>();
+        result &= PatchClass<SmoothEnsoGamePatch>();
         result &= PatchClass<RefinedDifficultyButtonsPatch>();
         result &= PatchClass<FumenPostProcessingPatch>();
         result &= PatchClass<CustomTitleSceneEnterPatch>();
@@ -188,7 +190,7 @@ public class TnTrfMod
         else
         {
             Logger.Error("Due to some of the patches failed, reverting injected patches to ensure safety...");
-            Harmony.UnpatchSelf();
+            Harmony!.UnpatchSelf();
         }
     }
 
@@ -229,11 +231,14 @@ public class TnTrfMod
     public void OnUpdate()
     {
         if (!ModConfig.EnableMod.Value) return;
+
+        ModSettingsScreenUi.Update();
+
         if (!RunOnMainThread.IsEmpty)
             while (RunOnMainThread.TryDequeue(out var action))
                 action?.Invoke();
 
-        if (!_scenes.TryGetValue(sceneName, out var scenes)) return;
+        if (!_scenes.TryGetValue(sceneName!, out var scenes)) return;
 
         foreach (var scene in scenes) scene.Update();
     }
@@ -255,7 +260,13 @@ public class TnTrfMod
         Common.Init();
         Common.InitLocal();
 
-        if (!_scenes.TryGetValue(sceneName, out var scenes)) return;
+        if (!_settingsUiInitialized)
+        {
+            _settingsUiInitialized = true;
+            ModSettingsScreenUi.Init();
+        }
+
+        if (!_scenes.TryGetValue(sceneName!, out var scenes)) return;
         var shouldInvokeLowLatencyGC = false;
         foreach (var customScene in scenes)
         {
@@ -318,15 +329,15 @@ public class TnTrfMod
 
     public string GetSceneName()
     {
-        return sceneName;
+        return sceneName ?? "";
     }
 
-    private bool PatchClass<T>(ConfigEntry<bool> configEntry = null)
+    private bool PatchClass<T>(ConfigEntry<bool>? configEntry = null)
     {
         try
         {
             if (configEntry is { Value: false }) return true;
-            Harmony.PatchAll(typeof(T));
+            Harmony!.PatchAll(typeof(T));
             Logger.Info($"Injected \"{typeof(T).Name}\" Patch");
             return true;
         }

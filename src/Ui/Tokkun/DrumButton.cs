@@ -2,6 +2,7 @@ using TnTRFMod.Ui.Widgets;
 using UnityEngine;
 #if BEPINEX
 using TMPro;
+
 #elif MELONLOADER
 using Il2CppTMPro;
 #endif
@@ -16,8 +17,8 @@ public class DrumButton : BaseUi
 
     private readonly ImageUi buttonImage;
     private readonly TextUi buttonTopLabel;
-    private TextUi? _actionText;
     private ImageUi? _actionIcon;
+    private TextUi? _actionText;
 
     public DrumButton(bool isKatsu = false)
     {

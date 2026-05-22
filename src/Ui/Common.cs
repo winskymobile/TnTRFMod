@@ -6,14 +6,15 @@ namespace TnTRFMod.Ui;
 
 public class Common
 {
+    // 游戏的设计屏幕分辨率
     public const int ScreenWidth = 1920;
     public const int ScreenHeight = 1080;
-    private static FontTMPManager _fontMgr;
-    private static GameObject _drawCanvasForScene;
-    private static CanvasGroup _drawCanvasForSceneCanvasGroup;
-    private static GameObject _drawCanvasForSceneNoDestroy;
-    private static CanvasGroup _drawCanvasForSceneNoDestroyCanvasGroup;
-    private static ControllerManager _controllerManager;
+    private static FontTMPManager? _fontMgr;
+    private static GameObject? _drawCanvasForScene;
+    private static CanvasGroup? _drawCanvasForSceneCanvasGroup;
+    private static GameObject? _drawCanvasForSceneNoDestroy;
+    private static CanvasGroup? _drawCanvasForSceneNoDestroyCanvasGroup;
+    private static ControllerManager? _controllerManager;
     private static bool inited;
 
     public static void Init()
@@ -56,13 +57,13 @@ public class Common
     {
         if (goName == "")
         {
-            _drawCanvasForScene.GetComponent<RectTransform>().SetParent(null, false);
+            _drawCanvasForScene!.GetComponent<RectTransform>().SetParent(null, false);
             _drawCanvasForScene.transform.localPosition = Vector3.zero;
         }
         else
         {
             var go = GameObject.Find(goName);
-            _drawCanvasForScene.GetComponent<RectTransform>().SetParent(go.transform, false);
+            _drawCanvasForScene!.GetComponent<RectTransform>().SetParent(go.transform, false);
             _drawCanvasForScene.transform.localPosition = Vector3.zero;
         }
     }

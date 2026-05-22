@@ -45,6 +45,8 @@ public static class TextureManager
     public static class Textures
     {
         public static readonly TexHandle UiBase = new(Resources.UiBase);
+        public static readonly TexHandle UiFrame = new(Resources.UiFrame);
+        public static readonly TexHandle UiFrameShadowed = new(Resources.UiFrameShadowed);
         public static readonly TexHandle OnpuSpriteSet = new(Resources.OnpuSpriteSet);
         public static readonly TexHandle TrainCounter = new(Resources.TrainCounter);
         public static readonly TexHandle HitRyo = new(Resources.HitRyo);
@@ -62,5 +64,14 @@ public static class TextureManager
         public static readonly TexHandle TokkunIconPause = new(Resources.TokkunIconPause);
         public static readonly TexHandle TokkunIconResume = new(Resources.TokkunIconResume);
         public static readonly TexHandle TokkunIconRewind = new(Resources.TokkunIconRewind);
+
+        public static readonly TexHandle FumenPostEqualScrollSpeed = new(Resources.FumenPostEqualScrollSpeed);
+        public static readonly TexHandle FumenPostRandomScrollSpeed = new(Resources.FumenPostRandomScrollSpeed);
+        public static readonly TexHandle FumenPostSuperSlowScrollSpeed = new(Resources.FumenPostSuperSlowScrollSpeed);
+
+        public static readonly TexHandle FumenPostReverseSlowScrollSpeed =
+            new(Resources.FumenPostReverseSlowScrollSpeed);
+
+        public static readonly TexHandle FumenPostStrictJudgeTiming = new(Resources.FumenPostStrictJudgeTiming);
     }
 }

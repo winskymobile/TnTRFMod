@@ -8,6 +8,7 @@ using Logger = TnTRFMod.Utils.Logger;
 
 #if BEPINEX
 using Scripts.OutGame.Boot;
+
 #elif MELONLOADER
 using Il2CppScripts.OutGame.Boot;
 #endif

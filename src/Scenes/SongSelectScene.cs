@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 using Scripts.OutGame.SongSelect;
 using Scripts.OutGame.Common;
 using SoundLabelClass = SoundLabel.SoundLabel;
+
 #elif MELONLOADER
 using Il2CppScripts.OutGame.SongSelect;
 using Il2CppScripts.OutGame.Common;
@@ -138,7 +139,7 @@ public class SongSelectScene : IScene
         {
             Parent = fumenPostProcessingPanel,
             Position =
-                fumenPostProcessingTipLabel.Position + new Vector2(0, 80),
+                fumenPostProcessingTipLabel.Position + new Vector2(0, fumenPostProcessingTipLabel.PreferredHeight + 8),
             Size = new Vector2(fumenPostProcessingPanel.Size.x - 30, 50),
             I18nText = I18n.Get("fumenPostProcessing.equalScrollSpeed"),
             ButtonColor = FumenPostProcessingPatch.EnableEqualScrollSpeed ? ToggleOnColor : ToggleOffColor
@@ -150,7 +151,7 @@ public class SongSelectScene : IScene
             Position = equalScrollSpeedBtn.Position + new Vector2(0, equalScrollSpeedBtn.Size.y + 8),
             Size = new Vector2(fumenPostProcessingPanel.Size.x - 30, 50),
             I18nText = I18n.Get("fumenPostProcessing.superSlowScrollSpeed"),
-            ButtonColor = FumenPostProcessingPatch.EnableSuperSlowSpeed ? ToggleOnColor : ToggleOffColor
+            ButtonColor = FumenPostProcessingPatch.EnableSuperSlowScrollSpeed ? ToggleOnColor : ToggleOffColor
         };
 
         var randomScrollSpeedBtn = new ButtonUi
@@ -159,7 +160,7 @@ public class SongSelectScene : IScene
             Position = superSlowScrollSpeedBtn.Position + new Vector2(0, superSlowScrollSpeedBtn.Size.y + 8),
             Size = new Vector2(fumenPostProcessingPanel.Size.x - 30, 50),
             I18nText = I18n.Get("fumenPostProcessing.randomScrollSpeed"),
-            ButtonColor = FumenPostProcessingPatch.EnableRandomSlowSpeed ? ToggleOnColor : ToggleOffColor
+            ButtonColor = FumenPostProcessingPatch.EnableRandomScrollSpeed ? ToggleOnColor : ToggleOffColor
         };
 
         var reverseScrollSpeedBtn = new ButtonUi
@@ -168,7 +169,7 @@ public class SongSelectScene : IScene
             Position = randomScrollSpeedBtn.Position + new Vector2(0, randomScrollSpeedBtn.Size.y + 8),
             Size = new Vector2(fumenPostProcessingPanel.Size.x - 30, 50),
             I18nText = I18n.Get("fumenPostProcessing.reverseScrollSpeed"),
-            ButtonColor = FumenPostProcessingPatch.EnableReverseSlowSpeed ? ToggleOnColor : ToggleOffColor
+            ButtonColor = FumenPostProcessingPatch.EnableReverseSlowScrollSpeed ? ToggleOnColor : ToggleOffColor
         };
 
         var strictJudgeTimingBtn = new ButtonUi
@@ -180,6 +181,9 @@ public class SongSelectScene : IScene
             ButtonColor = FumenPostProcessingPatch.EnableStrictJudgeTiming ? ToggleOnColor : ToggleOffColor
         };
 
+        fumenPostProcessingPanel.Size = new Vector2(fumenPostProcessingPanel.Size.x,
+            strictJudgeTimingBtn.Position.y + strictJudgeTimingBtn.Size.y + 15f);
+
         panelButton.AddListener(() => { fumenPostProcessingPanel.Visible = !fumenPostProcessingPanel.Visible; });
         equalScrollSpeedBtn.AddListener(() =>
         {
@@ -189,21 +193,22 @@ public class SongSelectScene : IScene
         });
         superSlowScrollSpeedBtn.AddListener(() =>
         {
-            FumenPostProcessingPatch.EnableSuperSlowSpeed = !FumenPostProcessingPatch.EnableSuperSlowSpeed;
+            FumenPostProcessingPatch.EnableSuperSlowScrollSpeed = !FumenPostProcessingPatch.EnableSuperSlowScrollSpeed;
             superSlowScrollSpeedBtn.ButtonColor =
-                FumenPostProcessingPatch.EnableSuperSlowSpeed ? ToggleOnColor : ToggleOffColor;
+                FumenPostProcessingPatch.EnableSuperSlowScrollSpeed ? ToggleOnColor : ToggleOffColor;
         });
         randomScrollSpeedBtn.AddListener(() =>
         {
-            FumenPostProcessingPatch.EnableRandomSlowSpeed = !FumenPostProcessingPatch.EnableRandomSlowSpeed;
+            FumenPostProcessingPatch.EnableRandomScrollSpeed = !FumenPostProcessingPatch.EnableRandomScrollSpeed;
             randomScrollSpeedBtn.ButtonColor =
-                FumenPostProcessingPatch.EnableRandomSlowSpeed ? ToggleOnColor : ToggleOffColor;
+                FumenPostProcessingPatch.EnableRandomScrollSpeed ? ToggleOnColor : ToggleOffColor;
         });
         reverseScrollSpeedBtn.AddListener(() =>
         {
-            FumenPostProcessingPatch.EnableReverseSlowSpeed = !FumenPostProcessingPatch.EnableReverseSlowSpeed;
+            FumenPostProcessingPatch.EnableReverseSlowScrollSpeed =
+                !FumenPostProcessingPatch.EnableReverseSlowScrollSpeed;
             reverseScrollSpeedBtn.ButtonColor =
-                FumenPostProcessingPatch.EnableReverseSlowSpeed ? ToggleOnColor : ToggleOffColor;
+                FumenPostProcessingPatch.EnableReverseSlowScrollSpeed ? ToggleOnColor : ToggleOffColor;
         });
         strictJudgeTimingBtn.AddListener(() =>
         {

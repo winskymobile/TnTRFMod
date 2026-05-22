@@ -2,11 +2,10 @@ using HarmonyLib;
 using Il2CppInterop.Runtime;
 using TnTRFMod.Config;
 using TnTRFMod.Utils;
-using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 #if BEPINEX
-using SoundLabelClass = SoundLabel.SoundLabel;
+
 #elif MELONLOADER
 using SoundLabelClass = Il2CppSoundLabel.SoundLabel;
 #endif

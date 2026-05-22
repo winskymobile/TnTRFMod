@@ -59,8 +59,10 @@ public class TextUi : BaseUi
         }
     }
 
-    public float PreferredWidth => _uitext.GetPreferredWidth();
-    public float PreferredHeight => _uitext.GetPreferredHeight();
+    private Vector2 _cachedPreferredSize;
+
+    public float PreferredWidth => _cachedPreferredSize.x;
+    public float PreferredHeight => _cachedPreferredSize.y;
 
     public float FontSize
     {
@@ -70,7 +72,13 @@ public class TextUi : BaseUi
             _transform.SetHeight(value);
             _uitext.tmpro.fontSize = value;
             _uitext.Refresh();
+            _cachedPreferredSize = GetPreferredSize();
         }
+    }
+
+    public Vector2 GetPreferredSize()
+    {
+        return _textTMP.GetPreferredValues(Size.x, 0f);
     }
 
     public bool WordWrap
@@ -94,6 +102,7 @@ public class TextUi : BaseUi
             _transform.sizeDelta = value.sizeDelta;
             _transform.anchoredPosition = value.anchoredPosition;
             _uitext.Refresh();
+            _cachedPreferredSize = GetPreferredSize();
         }
     }
 
@@ -112,11 +121,13 @@ public class TextUi : BaseUi
     public void SetText(string format, float value0)
     {
         _uitext.tmpro.SetText(format, value0);
+        _cachedPreferredSize = GetPreferredSize();
     }
 
     public void SetText(string format, float value0, float value1)
     {
         _uitext.tmpro.SetText(format, value0, value1);
+        _cachedPreferredSize = GetPreferredSize();
     }
 
     private void UpdateText()
@@ -128,6 +139,7 @@ public class TextUi : BaseUi
         _uitext.faceDilate = 0.25f;
         _uitext.outlineWidth = 0.25f;
         _uitext.Refresh();
+        _cachedPreferredSize = GetPreferredSize();
     }
 
     public void SetTargetLanguageType(DataConst.LanguageType? fontType)

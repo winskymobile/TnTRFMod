@@ -3,12 +3,48 @@ using UnityEngine.InputSystem;
 namespace TnTRFMod.Config;
 
 /// <summary>
+/// 配置项类型枚举，用于UI渲染
+/// </summary>
+public enum ConfigItemType
+{
+    Bool,
+    Int,
+    Float,
+    Double,
+    String,
+    UInt,
+    KeyBinding
+}
+
+/// <summary>
+/// 配置项元数据，用于UI枚举和渲染
+/// </summary>
+public class ConfigItemMetadata
+{
+    public string Section { get; init; } = "";
+    public string KeyName { get; init; } = "";
+    public string DescriptionKey { get; init; } = "";
+    public ConfigItemType Type { get; init; }
+
+    /// <summary>此配置项相关的场景列表（用于"当前场景功能"分页过滤），空数组表示全局/不限场景</summary>
+    public string[] RelevantScenes { get; init; } = [];
+
+    public Func<object> GetValue { get; init; } = () => default!;
+    public Action<object> SetValue { get; init; } = _ => { };
+
+    public string CategoryKey => $"{Section}.{KeyName}";
+}
+
+/// <summary>
 /// 全局 Mod 配置项集中管理。
 /// 所有 ConfigEntry 和 KeyBindingConfigEntry 均在此定义，方便维护和引用。
 /// 使用：<c>ModConfig.EnableMod.Value</c> 替代 <c>TnTrfMod.Instance.enableMod.Value</c>
 /// </summary>
 public static class ModConfig
 {
+    /// <summary>所有配置项的扁平化元数据列表，供设置UI枚举使用</summary>
+    public static List<ConfigItemMetadata> AllItems { get; } = [];
+
     // =========================================================================
     // General 节
     // =========================================================================
@@ -169,7 +205,208 @@ public static class ModConfig
             DebugExportMusicNames = s.Bool("ExportMusicNames", "config.Debug.ExportMusicNames", false);
         });
 
+        // 构建所有配置项的扁平化元数据，供设置UI使用
+        AllItems.Clear();
+
+        // General
+        AddBool("General", "Enabled", Description("config.Enabled"), EnableMod);
+        AddBool("General", "EnableBetterBigHitPatch", Description("config.EnableBetterBigHitPatch"),
+            EnableBetterBigHitPatch, "Enso", "EnsoTest", "EnsoNetwork");
+        AddBool("General", "BetterBigHitSkipOnlineCheck", Description("config.BetterBigHitSkipOnlineCheck"),
+            BetterBigHitSkipOnlineCheck, "Enso", "EnsoTest", "EnsoNetwork");
+        AddBool("General", "EnableSkipBootScreenPatch", Description("config.EnableSkipBootScreenPatch"),
+            EnableSkipBootScreenPatch, "Boot");
+        AddBool("General", "EnableSkipRewardPatch", Description("config.EnableSkipRewardPatch"), EnableSkipRewardPatch);
+        AddBool("General", "EnableMinimumLatencyAudioClient", Description("config.EnableMinimumLatencyAudioClient"),
+            EnableMinimumLatencyAudioClient);
+        AddBool("General", "EnableAutoDownloadSubscriptionSongs",
+            Description("config.EnableAutoDownloadSubscriptionSongs"), EnableAutoDownloadSubscriptionSongs,
+            "SongSelect");
+        AddBool("General", "EnableOnpuTextRail", Description("config.EnableOnpuTextRail"), EnableOnpuTextRail, "Enso",
+            "EnsoTest");
+        AddBool("General", "EnableHighPrecisionTimerPatch", Description("config.EnableHighPrecisionTimerPatch"),
+            EnableHighPrecisionTimerPatch);
+        AddBool("General", "EnableNearestNeighborOnpuPatch", Description("config.EnableNearestNeighborOnpuPatch"),
+            EnableNearestNeighborOnpuPatch, "Enso", "EnsoTest", "EnsoNetwork");
+        AddBool("General", "EnableNoShadowOnpuPatch", Description("config.EnableNoShadowOnpuPatch"),
+            EnableNoShadowOnpuPatch, "Enso", "EnsoTest", "EnsoNetwork");
+        AddBool("General", "EnableCustomDressAnimationMod", Description("config.EnableCustomDressAnimationMod"),
+            EnableCustomDressAnimationMod, "DressUp");
+        AddBool("General", "EnableHitStatsPanelPatch", Description("config.EnableHitStatsPanelPatch"),
+            EnableHitStatsPanelPatch, "Enso", "EnsoTest");
+        AddBool("General", "EnableLouderSongPatch", Description("config.EnableLouderSongPatch"), EnableLouderSongPatch);
+        AddBool("General", "EnableScoreRankIcon", Description("config.EnableScoreRankIcon"), EnableScoreRankIcon,
+            "Enso", "EnsoTest");
+        AddBool("General", "EnableTatakonKeyboardSongSelect", Description("config.EnableTatakonKeyboardSongSelect"),
+            EnableTatakonKeyboardSongSelect, "SongSelect");
+        AddBool("General", "EnableInstantRelayPatch", Description("config.EnableInstantRelayPatch"),
+            EnableInstantRelayPatch);
+        AddInt("General", "ModifyMeasuresCapacity", Description("config.ModifyMeasuresCapacity"),
+            ModifyMeasuresCapacity);
+        AddString("General", "CustomTitleSceneEnterSceneName", Description("config.CustomTitleSceneEnterSceneName"),
+            CustomTitleSceneEnterSceneName);
+        AddFloat("General", "AutoPlayRendaSpeed", Description("config.AutoPlayRendaSpeed"), AutoPlayRendaSpeed, "Enso",
+            "EnsoTest");
+
+        // HitOffset
+        AddBool("HitOffset", "Enable", Description("config.HitOffset.Enable"), EnableHitOffset, "Enso", "EnsoTest");
+        AddBool("HitOffset", "InvertColor", Description("config.HitOffset.InvertColor"), HitOffsetInvertColor, "Enso",
+            "EnsoTest");
+        AddFloat("HitOffset", "RyoRange", Description("config.HitOffset.RyoRange"), HitOffsetRyoRange, "Enso",
+            "EnsoTest");
+
+        // BilibiliLiveStreamSongRequest
+        AddBool("BilibiliLiveStreamSongRequest", "Enable", Description("config.BilibiliLiveStreamSongRequest.Enable"),
+            EnableBilibiliLiveStreamSongRequest, "Boot", "SongSelect", "Enso");
+        AddUInt("BilibiliLiveStreamSongRequest", "RoomId", Description("config.BilibiliLiveStreamSongRequest.RoomId"),
+            BilibiliLiveStreamSongRoomId, "Boot", "SongSelect");
+        AddString("BilibiliLiveStreamSongRequest", "Token", Description("config.BilibiliLiveStreamSongRequest.Token"),
+            BilibiliLiveStreamSongToken, "Boot", "SongSelect");
+
+        // CustomPlayerName
+        AddBool("CustomPlayerName", "Enable", Description("config.CustomPlayerName.Enable"), EnableCustomPlayerName);
+        AddString("CustomPlayerName", "Name", Description("config.CustomPlayerName.Name"), CustomPlayerName);
+
+        // BufferedInput
+        AddBool("BufferedInput", "Enable", Description("config.BufferedInput.Enable"), EnableBufferedInputPatch);
+        AddInt("BufferedInput", "MaxBufferedInputCount", Description("config.BufferedInput.MaxBufferedInputCount"),
+            MaxBufferedInputCount);
+
+        // TokkunMode
+        AddBool("TokkunMode", "Enable", Description("config.TokkunMode.Enable"), EnableTokkunGamePatch, "Enso");
+        AddString("TokkunMode", "OnSongEndBehaviour", Description("config.TokkunMode.OnSongEndBehaviour"),
+            TokkunGameOnSongEndBehaviour, "Enso");
+        AddString("TokkunMode", "OnPauseBehaviour", Description("config.TokkunMode.OnPauseBehaviour"),
+            TokkunGameOnPauseBehaviour, "Enso");
+        AddDouble("TokkunMode", "SlowTimeOffset", Description("config.TokkunMode.SlowTimeOffset"),
+            TokkunGameSlowTimeOffset, "Enso");
+        AddDouble("TokkunMode", "FastTimeOffset", Description("config.TokkunMode.FastTimeOffset"),
+            TokkunGameFastTimeOffset, "Enso");
+        AddKeyBinding("TokkunMode", "P2LeftDonKey", Description("config.TokkunMode.P2LeftDonKey"), P2LeftDonKey, "Enso",
+            "EnsoTest");
+        AddKeyBinding("TokkunMode", "P2LeftKaKey", Description("config.TokkunMode.P2LeftKaKey"), P2LeftKaKey, "Enso",
+            "EnsoTest");
+        AddKeyBinding("TokkunMode", "P2RightDonKey", Description("config.TokkunMode.P2RightDonKey"), P2RightDonKey,
+            "Enso", "EnsoTest");
+        AddKeyBinding("TokkunMode", "P2RightKaKey", Description("config.TokkunMode.P2RightKaKey"), P2RightKaKey, "Enso",
+            "EnsoTest");
+
+        // Debug
+        AddBool("Debug", "SaveRawSaveData", Description("config.Debug.SaveRawSaveData"), DebugSaveRawSaveData);
+        AddBool("Debug", "ExportGameData", Description("config.Debug.ExportGameData"), DebugExportGameData);
+        AddBool("Debug", "ExportMusicNames", Description("config.Debug.ExportMusicNames"), DebugExportMusicNames,
+            "Boot");
+
         ConfigEntry.Load();
         KeyBindingConfigEntry.Load();
+    }
+
+    private static string Description(string key)
+    {
+        return key;
+    }
+
+    private static void AddBool(string section, string key, string desc, ConfigEntry<bool> entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.Bool,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddInt(string section, string key, string desc, ConfigEntry<int> entry, params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.Int,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddFloat(string section, string key, string desc, ConfigEntry<float> entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.Float,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddDouble(string section, string key, string desc, ConfigEntry<double> entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.Double,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddString(string section, string key, string desc, ConfigEntry<string> entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.String,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddUInt(string section, string key, string desc, ConfigEntry<uint> entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.UInt,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
+    }
+
+    private static void AddKeyBinding(string section, string key, string desc, KeyBindingConfigEntry entry,
+        params string[] scenes)
+    {
+        AllItems.Add(new ConfigItemMetadata
+        {
+            Section = section, KeyName = key, DescriptionKey = desc, Type = ConfigItemType.KeyBinding,
+            RelevantScenes = scenes,
+            GetValue = () => entry.Value,
+            SetValue = v =>
+            {
+                /* TOML write TBD */
+            }
+        });
     }
 }

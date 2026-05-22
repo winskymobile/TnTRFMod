@@ -101,4 +101,16 @@
     <ItemGroup>
         <Folder Include="src\Resources\Tokkun\"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <ResXRefFiles Include="src\Resources\*.png"/>
+        <ResXRefFiles Include="src\Resources\Locales.toml"/>
+        <ResXRefFiles Include="src\Resources\Tokkun\*"/>
+    </ItemGroup>
+
+    <Target Name="UpdateResxOnRefChange" BeforeTargets="CoreResGen"
+            Inputs="@(ResXRefFiles)" Outputs="$(IntermediateOutputPath)resxref.cache">
+        <Touch Files="src\Resources.resx"/>
+        <Touch Files="$(IntermediateOutputPath)resxref.cache" AlwaysCreate="true"/>
+    </Target>
 </Project>

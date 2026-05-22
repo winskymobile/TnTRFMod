@@ -32,6 +32,18 @@
         </value>
         <comment>Base Image source for GUI of TnTRFMod</comment>
     </data>
+    <data name="UiFrame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\UiFrame.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Base Image source for GUI of TnTRFMod</comment>
+    </data>
+    <data name="UiFrameShadowed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\UiFrameShadowed.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Base Image source for GUI of TnTRFMod</comment>
+    </data>
     <data name="OnpuSpriteSet" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>Resources\OnpuSpriteSet.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
@@ -74,6 +86,43 @@
             PublicKeyToken=b77a5c561934e089
         </value>
         <comment>Locale file</comment>
+    </data>
+
+    <!-- Fumen Post Processing Icons -->
+    <data name="FumenPostEqualScrollSpeed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\FumenPostProcessing\EqualScrollSpeed.png;System.Byte[], mscorlib, Version=4.0.0.0,
+            Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Fumen post-processing icon for EqualScrollSpeed</comment>
+    </data>
+    <data name="FumenPostRandomScrollSpeed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\FumenPostProcessing\RandomScrollSpeed.png;System.Byte[], mscorlib, Version=4.0.0.0,
+            Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Fumen post-processing icon for RandomScrollSpeed</comment>
+    </data>
+    <data name="FumenPostSuperSlowScrollSpeed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\FumenPostProcessing\SuperSlowScrollSpeed.png;System.Byte[], mscorlib, Version=4.0.0.0,
+            Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Fumen post-processing icon for SuperSlowScrollSpeed</comment>
+    </data>
+    <data name="FumenPostReverseSlowScrollSpeed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\FumenPostProcessing\ReverseSlowScrollSpeed.png;System.Byte[], mscorlib, Version=4.0.0.0,
+            Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Fumen post-processing icon for ReverseSlowScrollSpeed</comment>
+    </data>
+    <data name="FumenPostStrictJudgeTiming" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>Resources\FumenPostProcessing\StrictJudgeTiming.png;System.Byte[], mscorlib, Version=4.0.0.0,
+            Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+        <comment>Fumen post-processing icon for StrictJudgeTiming</comment>
     </data>
 
     <!-- Tokkun Ui Images -->

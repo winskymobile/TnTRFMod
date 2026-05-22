@@ -7,6 +7,7 @@ using Scripts.OutGame.SongSelect;
 using Scripts.OutGame.SongSelect.DiffSetting;
 using Scripts.OutGame.Training;
 using SoundLabelClass = SoundLabel.SoundLabel;
+
 #elif MELONLOADER
 using Il2CppScripts.Common;
 using Il2CppScripts.OutGame.SongSelect;

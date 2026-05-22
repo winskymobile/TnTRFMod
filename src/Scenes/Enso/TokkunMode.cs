@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #if BEPINEX
 using TMPro;
+
 #elif MELONLOADER
 using Il2CppTMPro;
 #endif

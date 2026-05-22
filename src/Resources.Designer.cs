@@ -62,6 +62,56 @@ namespace TnTRFMod {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] FumenPostEqualScrollSpeed {
+            get {
+                object obj = ResourceManager.GetObject("FumenPostEqualScrollSpeed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FumenPostRandomScrollSpeed {
+            get {
+                object obj = ResourceManager.GetObject("FumenPostRandomScrollSpeed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FumenPostReverseSlowScrollSpeed {
+            get {
+                object obj = ResourceManager.GetObject("FumenPostReverseSlowScrollSpeed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FumenPostStrictJudgeTiming {
+            get {
+                object obj = ResourceManager.GetObject("FumenPostStrictJudgeTiming", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FumenPostSuperSlowScrollSpeed {
+            get {
+                object obj = ResourceManager.GetObject("FumenPostSuperSlowScrollSpeed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] HitFuka {
             get {
                 object obj = ResourceManager.GetObject("HitFuka", resourceCulture);
@@ -245,6 +295,26 @@ namespace TnTRFMod {
         internal static byte[] UiBase {
             get {
                 object obj = ResourceManager.GetObject("UiBase", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] UiFrame {
+            get {
+                object obj = ResourceManager.GetObject("UiFrame", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] UiFrameShadowed {
+            get {
+                object obj = ResourceManager.GetObject("UiFrameShadowed", resourceCulture);
                 return ((byte[])(obj));
             }
         }
