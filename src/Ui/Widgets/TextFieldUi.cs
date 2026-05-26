@@ -72,6 +72,8 @@ public class TextFieldUi : BaseUi
         }));
     }
 
+    public override Vector2 PreferredSize => new(_placeHolderText.Size.x + 30, _placeHolderText.Size.y + 30);
+
     public string Value
     {
         get => inputField.text;

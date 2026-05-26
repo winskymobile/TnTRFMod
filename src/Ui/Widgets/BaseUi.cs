@@ -25,6 +25,8 @@ public class BaseUi : IDisposable
         _transform = _go.AddComponent<RectTransform>();
         _transform.SetParent(Common.GetDrawCanvasForScene());
         _transform.pivot = new Vector2(0, 1);
+        _transform.anchorMin = new Vector2(0, 1);
+        _transform.anchorMax = new Vector2(0, 1);
         _go.layer = LayerMask.NameToLayer("UI");
         _transform.transform.position =
             new Vector3(_transform.transform.position.x, _transform.transform.position.y, 90f);
@@ -37,14 +39,10 @@ public class BaseUi : IDisposable
     {
         get
         {
-            var pos = _transform.localPosition;
-            return IsChildOfCanvas
-                ? new Vector2(pos.x + Common.ScreenWidth / 2f, Common.ScreenHeight / 2f - pos.y)
-                : new Vector2(pos.x, -pos.y);
+            var pos = _transform.anchoredPosition;
+            return new Vector2(pos.x, -pos.y);
         }
-        set => _transform.localPosition = IsChildOfCanvas
-            ? new Vector2(value.x - Common.ScreenWidth / 2f, Common.ScreenHeight / 2f - value.y)
-            : new Vector2(value.x, -value.y);
+        set => _transform.anchoredPosition = new Vector2(value.x, -value.y);
     }
 
     public Vector2 Size
@@ -69,6 +67,8 @@ public class BaseUi : IDisposable
     {
         set => value.AddChild(this);
     }
+
+    public virtual Vector2 PreferredSize => new(100f, 100f);
 
     public void Dispose()
     {

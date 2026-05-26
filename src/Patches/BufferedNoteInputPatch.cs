@@ -4,6 +4,7 @@ using TnTRFMod.Config;
 using TnTRFMod.Utils;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+
 #if BEPINEX
 
 #elif MELONLOADER

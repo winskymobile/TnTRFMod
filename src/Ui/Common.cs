@@ -19,9 +19,9 @@ public class Common
 
     public static void Init()
     {
-        if (inited) return;
-        inited = true;
+        if (_drawCanvasForSceneNoDestroy != null) return;
         _drawCanvasForSceneNoDestroy = new GameObject("CanvasForTnTRFModNoDestroy");
+        var transform = _drawCanvasForSceneNoDestroy.AddComponent<RectTransform>();
         Object.DontDestroyOnLoad(_drawCanvasForSceneNoDestroy);
         _drawCanvasForSceneNoDestroyCanvasGroup = _drawCanvasForSceneNoDestroy.AddComponent<CanvasGroup>();
         _drawCanvasForSceneNoDestroy.hideFlags = HideFlags.HideAndDontSave;
@@ -40,7 +40,9 @@ public class Common
 
     public static void InitLocal()
     {
+        if (_drawCanvasForScene != null) return;
         _drawCanvasForScene = new GameObject("CanvasForTnTRFMod");
+        var transform = _drawCanvasForScene.AddComponent<RectTransform>();
         var canvas = _drawCanvasForScene.AddComponent<Canvas>();
         _drawCanvasForSceneCanvasGroup = _drawCanvasForScene.AddComponent<CanvasGroup>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -70,12 +72,12 @@ public class Common
 
     public static Transform GetDrawCanvasForScene()
     {
-        return _drawCanvasForScene!.transform!;
+        return _drawCanvasForScene!.transform;
     }
 
     public static Transform GetDrawCanvasNoDestroyForScene()
     {
-        return _drawCanvasForSceneNoDestroy!.transform!;
+        return _drawCanvasForSceneNoDestroy!.transform;
     }
 
     public static CanvasGroup GetDrawCanvasForSceneCanvasGroup()

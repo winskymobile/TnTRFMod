@@ -19,6 +19,8 @@ public class TextUi : BaseUi
     protected readonly TextMeshProUGUI _textTMP;
     protected readonly UiText _uitext;
 
+    private Vector2 _cachedPreferredSize;
+
     private DataConst.LanguageType? targetLanguageType;
 
     public TextUi(bool useMainFont = false)
@@ -59,8 +61,6 @@ public class TextUi : BaseUi
         }
     }
 
-    private Vector2 _cachedPreferredSize;
-
     public float PreferredWidth => _cachedPreferredSize.x;
     public float PreferredHeight => _cachedPreferredSize.y;
 
@@ -76,10 +76,7 @@ public class TextUi : BaseUi
         }
     }
 
-    public Vector2 GetPreferredSize()
-    {
-        return _textTMP.GetPreferredValues(Size.x, 0f);
-    }
+    public override Vector2 PreferredSize => _cachedPreferredSize;
 
     public bool WordWrap
     {
@@ -110,6 +107,11 @@ public class TextUi : BaseUi
     {
         get => _uitext.tmpro.alignment;
         set => _uitext.tmpro.alignment = value;
+    }
+
+    public Vector2 GetPreferredSize()
+    {
+        return _textTMP.GetPreferredValues(Size.x, 0f);
     }
 
     public void SetText(I18n.I18nResult format)
