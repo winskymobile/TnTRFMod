@@ -7,6 +7,7 @@
         <AssemblyName>net.stevexmh.$(ModName)</AssemblyName>
         <Product>TnTRFMod</Product>
         <Version>0.9.0</Version>
+        <InformationalVersion>0.9.0</InformationalVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
         <RestoreAdditionalProjectSources>
@@ -79,6 +80,12 @@
               DestinationFolder="$(GameDir)\Mods\$(AssemblyName)"
               SkipUnchangedFiles="true"/>
     </Target>
+
+    <ItemGroup>
+        <Compile Remove="tests/**/*.cs"/>
+        <EmbeddedResource Remove="tests/**"/>
+        <None Remove="tests/**"/>
+    </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Update="src\Resources.resx">

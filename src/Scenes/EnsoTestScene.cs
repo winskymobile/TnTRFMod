@@ -1,6 +1,7 @@
 using TnTRFMod.Config;
 using TnTRFMod.Patches;
 using TnTRFMod.Scenes.Enso;
+using TnTRFMod.Ui;
 
 namespace TnTRFMod.Scenes;
 
@@ -24,6 +25,13 @@ public class EnsoTestScene : IScene
         if (ModConfig.EnableNearestNeighborOnpuPatch.Value) NearestNeighborOnpuPatch.PatchLaneTarget();
         if (ModConfig.EnableHitStatsPanelPatch.Value) HitStatusPanel.Start();
         if (ModConfig.EnableHitOffset.Value) HitOffsetTip.Start();
+
+        var canvasPlacement = SceneCanvasPolicy.GetPlacement(SceneName, ModConfig.EnableHitStatsPanelPatch.Value);
+        if (canvasPlacement == LocalCanvasPlacement.DetachedOverlay)
+        {
+            Common.MoveLocalCanvas("");
+            Common.ResetLocalCanvasVisibility();
+        }
     }
 
     public void Update()

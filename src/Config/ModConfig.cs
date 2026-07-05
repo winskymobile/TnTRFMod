@@ -66,6 +66,7 @@ public static class ModConfig
     public static ConfigEntry<bool> EnableTatakonKeyboardSongSelect { get; private set; } = ConfigEntry<bool>.Noop;
     public static ConfigEntry<bool> EnableInstantRelayPatch { get; private set; } = ConfigEntry<bool>.Noop;
     public static ConfigEntry<int> ModifyMeasuresCapacity { get; private set; } = ConfigEntry<int>.Noop;
+    public static ConfigEntry<bool> UnsafeSkipLibTaikoCrcCheck { get; private set; } = ConfigEntry<bool>.Noop;
     public static ConfigEntry<string> CustomTitleSceneEnterSceneName { get; private set; } = ConfigEntry<string>.Noop;
     public static ConfigEntry<float> AutoPlayRendaSpeed { get; private set; } = ConfigEntry<float>.Noop;
 
@@ -150,6 +151,8 @@ public static class ModConfig
             EnableInstantRelayPatch = s.Bool("EnableInstantRelayPatch", "config.EnableInstantRelayPatch", true);
             // 数值型配置
             ModifyMeasuresCapacity = s.Int("ModifyMeasuresCapacity", "config.ModifyMeasuresCapacity", 65536);
+            UnsafeSkipLibTaikoCrcCheck =
+                s.Bool("UnsafeSkipLibTaikoCrcCheck", "config.UnsafeSkipLibTaikoCrcCheck", false);
             CustomTitleSceneEnterSceneName = s.String("CustomTitleSceneEnterSceneName",
                 "config.CustomTitleSceneEnterSceneName", "");
             AutoPlayRendaSpeed = s.Float("AutoPlayRendaSpeed", "config.AutoPlayRendaSpeed", 30f);
@@ -243,6 +246,8 @@ public static class ModConfig
             EnableInstantRelayPatch);
         AddInt("General", "ModifyMeasuresCapacity", Description("config.ModifyMeasuresCapacity"),
             ModifyMeasuresCapacity);
+        AddBool("General", "UnsafeSkipLibTaikoCrcCheck", Description("config.UnsafeSkipLibTaikoCrcCheck"),
+            UnsafeSkipLibTaikoCrcCheck);
         AddString("General", "CustomTitleSceneEnterSceneName", Description("config.CustomTitleSceneEnterSceneName"),
             CustomTitleSceneEnterSceneName);
         AddFloat("General", "AutoPlayRendaSpeed", Description("config.AutoPlayRendaSpeed"), AutoPlayRendaSpeed, "Enso",

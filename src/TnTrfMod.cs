@@ -30,7 +30,8 @@ public class TnTrfMod
 {
     public const string MOD_NAME = "TnTRFMod";
     public const string MOD_AUTHOR = "SteveXMH";
-    public const string MOD_VERSION = "0.9.0";
+    public const string MOD_VERSION = ModVersionInfo.PluginVersion;
+    public const string MOD_DISPLAY_VERSION = ModVersionInfo.DisplayVersion;
 #if BEPINEX
     public const string MOD_LOADER = "BepInEx";
 #endif
@@ -88,7 +89,8 @@ public class TnTrfMod
             Console.Out.Write(msg);
         });
         if (ModConfig.ModifyMeasuresCapacity.Value > 300)
-            LibTaikoPatches.InitExpandCSyousetsu(ModConfig.ModifyMeasuresCapacity.Value);
+            LibTaikoPatches.InitExpandCSyousetsu(ModConfig.ModifyMeasuresCapacity.Value,
+                ModConfig.UnsafeSkipLibTaikoCrcCheck.Value);
         _ = SongAliasTable.ReloadAliasTable();
 
         SceneManager.sceneLoaded +=
@@ -160,6 +162,7 @@ public class TnTrfMod
 
         result &= PatchClass<BetterBigHitPatch>(ModConfig.EnableBetterBigHitPatch);
         result &= PatchClass<SkipBootScreenPatch>();
+        result &= PatchClass<SkipBootMoviePatch>();
         result &= PatchClass<SkipRewardPatch>(ModConfig.EnableSkipRewardPatch);
         result &= PatchClass<NoShadowOnpuPatch>(ModConfig.EnableNoShadowOnpuPatch);
         result &= PatchClass<NearestNeighborOnpuPatch>(ModConfig.EnableNearestNeighborOnpuPatch);
@@ -187,10 +190,14 @@ public class TnTrfMod
         {
             Logger.Info("Successfully injected all configured patches!");
         }
-        else
+        else if (PatchCompatibilityPolicy.ShouldRollbackAllPatchesAfterFailure())
         {
             Logger.Error("Due to some of the patches failed, reverting injected patches to ensure safety...");
             Harmony!.UnpatchSelf();
+        }
+        else
+        {
+            Logger.Warn("Some patches failed to inject; keeping successfully injected patches active for compatibility.");
         }
     }
 

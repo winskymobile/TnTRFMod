@@ -3,6 +3,7 @@
 
 
 using HarmonyLib;
+using System.Reflection;
 
 #if BEPINEX
 
@@ -15,13 +16,20 @@ namespace TnTRFMod.Patches;
 [HarmonyPatch]
 internal class SkipRewardPatch
 {
-    [HarmonyPatch(typeof(ResultPlayer._ShowDonCoinAndRewardAsync_d__164))]
-    [HarmonyPatch(nameof(ResultPlayer._ShowDonCoinAndRewardAsync_d__164.MoveNext))]
-    [HarmonyPatch(MethodType.Normal)]
-    [HarmonyPrefix]
-    public static void ResultPlayer__ShowDonCoinAndRewardAsync_d__164_MoveNext_Prefix(
-        ResultPlayer._ShowDonCoinAndRewardAsync_d__164 __instance)
+    [HarmonyTargetMethods]
+    private static IEnumerable<MethodBase> TargetMethods()
     {
-        __instance.__1__state = 2;
+        foreach (var suffix in new[] { 164, 163, 157, 92 })
+        {
+            var stateMachine = AccessTools.Inner(typeof(ResultPlayer), $"_ShowDonCoinAndRewardAsync_d__{suffix}");
+            var moveNext = AccessTools.Method(stateMachine, "MoveNext");
+            if (moveNext != null) yield return moveNext;
+        }
+    }
+
+    [HarmonyPrefix]
+    public static void ResultPlayer_ShowDonCoinAndRewardAsync_MoveNext_Prefix(object __instance)
+    {
+        AccessTools.Field(__instance.GetType(), "__1__state")?.SetValue(__instance, 2);
     }
 }

@@ -37,7 +37,18 @@ public class EnsoScene : IScene
         if (ModConfig.EnableScoreRankIcon.Value) ScoreRankIcon.Init();
         if (ModConfig.EnableOnpuTextRail.Value) TnTrfMod.Instance.StartCoroutine(DrawOnpuTextRail());
 
-        Common.MoveLocalCanvas("Canvas");
+        var canvasPlacement = SceneCanvasPolicy.GetPlacement(SceneName, ModConfig.EnableHitStatsPanelPatch.Value);
+        if (canvasPlacement == LocalCanvasPlacement.DetachedOverlay)
+        {
+            Common.MoveLocalCanvas("");
+        }
+        else
+        {
+            Common.MoveLocalCanvas("Canvas");
+        }
+
+        if (SceneCanvasPolicy.ShouldForceVisible(canvasPlacement))
+            Common.ResetLocalCanvasVisibility();
     }
 
     public void Destroy()

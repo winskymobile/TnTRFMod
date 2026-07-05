@@ -42,14 +42,20 @@ public class HitStatusPanel
 
         trainCounterUi = new ImageUi(TextureManager.Textures.TrainCounter)
         {
-            Position = new Vector2(37.5f, 577.5f),
             Name = "TrainCounterSprite"
         };
+        trainCounterUi.Position = new Vector2(
+            HitStatsPanelPresentationPolicy.PanelPositionX,
+            HitStatsPanelPresentationPolicy.CalculatePanelPositionY(Common.ScreenHeight, trainCounterUi.TextureHeight));
+        trainCounterUi._transform.localScale = new Vector3(
+            HitStatsPanelPresentationPolicy.PanelScale,
+            HitStatsPanelPresentationPolicy.PanelScale,
+            1f);
 
         var hitAspectLabel = new TextUi(true)
         {
             I18nText = I18n.Get("hitStats.hitAspectLabel"),
-            FontSize = 50
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(50f)
         };
         trainCounterUi.AddChild(hitAspectLabel);
         hitAspectLabel.Position = new Vector2(33, 40);
@@ -59,7 +65,7 @@ public class HitStatusPanel
         var rendaLabel = new TextUi(true)
         {
             I18nText = I18n.Get("hitStats.rendaLabel"),
-            FontSize = 40,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(40f),
             Color = new Color32(255, 255, 35, 255)
         };
         trainCounterUi.AddChild(rendaLabel);
@@ -84,7 +90,7 @@ public class HitStatusPanel
         hitAspectValue = new TextUi(true)
         {
             Text = "100%",
-            FontSize = 50,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(50f),
             Color = aspectTextColor,
             Alignment = TextAlignmentOptions.TopRight
         };
@@ -94,7 +100,7 @@ public class HitStatusPanel
         ryoAspect = new TextUi(true)
         {
             Text = "100",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Color = aspectTextColor,
             Alignment = TextAlignmentOptions.TopRight
         };
@@ -104,7 +110,7 @@ public class HitStatusPanel
         kaAspect = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Color = aspectTextColor,
             Alignment = TextAlignmentOptions.TopRight
         };
@@ -114,7 +120,7 @@ public class HitStatusPanel
         fukaAspect = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Color = aspectTextColor,
             Alignment = TextAlignmentOptions.TopRight
         };
@@ -128,7 +134,7 @@ public class HitStatusPanel
         ryoCounter = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Alignment = TextAlignmentOptions.TopRight
         };
         trainCounterUi.AddChild(ryoCounter);
@@ -137,7 +143,7 @@ public class HitStatusPanel
         kaCounter = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Alignment = TextAlignmentOptions.TopRight
         };
         trainCounterUi.AddChild(kaCounter);
@@ -146,7 +152,7 @@ public class HitStatusPanel
         fukaCounter = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Alignment = TextAlignmentOptions.TopRight
         };
         trainCounterUi.AddChild(fukaCounter);
@@ -155,7 +161,7 @@ public class HitStatusPanel
         rendaCounter = new TextUi(true)
         {
             Text = "0",
-            FontSize = 48,
+            FontSize = HitStatsPanelPresentationPolicy.ScaleFont(48f),
             Alignment = TextAlignmentOptions.TopRight
         };
         trainCounterUi.AddChild(rendaCounter);
@@ -229,6 +235,13 @@ public class HitStatusPanel
 
     public void Update()
     {
+        var shouldShow = HitStatsPanelPresentationPolicy.ShouldShow(
+            _ensoGameManager.ensoParam.IsPause,
+            _ensoGameManager.state >= EnsoGameManager.State.ToResult);
+
+        trainCounterUi.SetActive(shouldShow);
+        if (!shouldShow) return;
+
         UpdatePanel();
     }
 }

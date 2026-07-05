@@ -20,6 +20,9 @@ public class EnsoGameBasePatch
 {
     public static readonly PlayerState[] PlayerStates = new PlayerState[5];
 
+    private static readonly System.Reflection.MethodInfo? _taikoCorePlayerGetRyo =
+        AccessTools.Method(typeof(TaikoCorePlayer), "GetRyo");
+
     private static readonly float[] _rendaTimers = new float[5];
 
     // private static EnsoGameManager.State _lastState = EnsoGameManager.State.Nop;
@@ -215,7 +218,10 @@ public class EnsoGameBasePatch
                     // noteDelayMs + tatakonDelayMs;
                     // Console.Out.WriteLine($"Onpu Type: {hitResult} noteDelay: {__instance.settings.noteDelay} tatakonDelay: {__instance.settings.tatakonDelay}");
                     OnSimpleHit(hit.player, hitResult, onpuJustTime);
-                    __instance.taikoCorePlayer.GetRyo((TaikoCoreTypes.BranchTypes)hit.onpu.branchType);
+                    _taikoCorePlayerGetRyo?.Invoke(__instance.taikoCorePlayer,
+                    [
+                        (TaikoCoreTypes.BranchTypes)hit.onpu.branchType
+                    ]);
                     break;
                 case TaikoCoreTypes.OnpuTypes.GekiRenda:
                 case TaikoCoreTypes.OnpuTypes.DaiRenda:

@@ -8,6 +8,8 @@ namespace TnTRFMod.Patches;
 [HarmonyPatch]
 internal class LibTaikoPatches
 {
+    private const uint SupportedExpandedCSyousetsuCrc = 0x1E5B3CFF;
+
     [DllImport("kernel32.dll", SetLastError = true)]
     public static extern IntPtr GetCurrentProcess();
 
@@ -54,7 +56,7 @@ internal class LibTaikoPatches
         }
     }
 
-    internal static void InitExpandCSyousetsu(int N)
+    internal static void InitExpandCSyousetsu(int N, bool unsafeSkipCrcCheck)
     {
         var moduleBase = GetModuleHandle("LibTaiko.dll");
         if (moduleBase == IntPtr.Zero)
@@ -66,11 +68,18 @@ internal class LibTaikoPatches
         var crc = GetModuleFileCrc32(moduleBase);
         Logger.Info($"LibTaiko.dll CRC32 (file): 0x{crc:X8}");
 
-        if (crc == 0x1E5B3CFF)
-            InitExpandCSyousetsu_Ver1E5B3CFF(N);
-        else
+        if (!LibTaikoPatchPolicy.ShouldApplyKnownPatch(crc, SupportedExpandedCSyousetsuCrc, unsafeSkipCrcCheck))
+        {
             Logger.Warn(
                 "LibTaiko.dll crc mismatch, maybe it's updated and the mod isn't supported this, aborting CSyousetsu expansion.");
+            return;
+        }
+
+        if (crc != SupportedExpandedCSyousetsuCrc)
+            Logger.Warn(
+                "UnsafeSkipLibTaikoCrcCheck is enabled. Applying the known LibTaiko.dll patch table to an unsupported CRC; this may crash the game.");
+
+        InitExpandCSyousetsu_Ver1E5B3CFF(N);
     }
 
     private static unsafe void InitExpandCSyousetsu_Ver1E5B3CFF(int N)

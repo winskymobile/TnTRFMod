@@ -70,6 +70,15 @@ public class Common
         }
     }
 
+    public static void ResetLocalCanvasVisibility()
+    {
+        _drawCanvasForScene!.SetActive(true);
+        var canvasGroup = GetDrawCanvasForSceneCanvasGroup();
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
     public static Transform GetDrawCanvasForScene()
     {
         return _drawCanvasForScene!.transform;

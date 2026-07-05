@@ -17,7 +17,7 @@ public class TitleScene : IScene
     {
         _ = new TextUi
         {
-            Text = $"{TnTrfMod.MOD_NAME} v{TnTrfMod.MOD_VERSION} ({TnTrfMod.MOD_LOADER})",
+            Text = $"{TnTrfMod.MOD_NAME} v{TnTrfMod.MOD_DISPLAY_VERSION} ({TnTrfMod.MOD_LOADER})",
             Position = new Vector2(64f, 64f)
         };
 

@@ -82,6 +82,8 @@ config.ModifyMeasuresCapacity = """
 通过补丁手段提高小节线的容量以支持加载超过 300 小节的谱面（未完全测试）
 理论上可以设置为近乎无限，仅当设置为大于 300 时启用。
 """
+config.UnsafeSkipLibTaikoCrcCheck = """危险：跳过 LibTaiko.dll CRC 检查并强制应用小节容量补丁。
+仅在你明确知道当前游戏版本可能崩溃的风险时启用。默认关闭。"""
 config.AutoPlayRendaSpeed = """自动演奏模式下的连打速度
 最大速度取决于显示器刷新率
 设置为 0 可禁用自动演奏模式下的连打"""
@@ -239,6 +241,8 @@ config.ModifyMeasuresCapacity = """
 Apply patches to expand measures limit from 300 to higher capacity. (NOT FULLY TESTED)
 In theory this can be set almost unlimited, only apply when set higher than 300.
 """
+config.UnsafeSkipLibTaikoCrcCheck = """DANGEROUS: Skip the LibTaiko.dll CRC check and force the measure-capacity patch.
+Enable this only if you accept that unsupported game versions may crash. Disabled by default."""
 config.AutoPlayRendaSpeed = "The speed of rolls in Auto-Play mode. the max speed depends on the refresh rate of your monitor. Setting it to 0 will make Auto-Play not hit any rolls."
 config.EnableInstantRelayPatch = "Enable instant relay loading screen patch."
 config.CustomTitleSceneEnterSceneName = """Controls the scene to enter when exiting the title screen.
@@ -379,6 +383,7 @@ config.EnableHitStatsPanelPatch = "演奏中に精度パネルを表示"
 config.EnableLouderSongPatch = "楽曲の最大音量を少し引き上げる"
 config.EnableScoreRankIcon = "演奏中にスコアランクアイコンを表示"
 config.EnableTatakonKeyboardSongSelect = "キーボードで曲選択（不安定）"
+config.UnsafeSkipLibTaikoCrcCheck = "危険: LibTaiko.dll CRC チェックをスキップして小節容量パッチを強制適用"
 config.AutoPlayRendaSpeed = """オート演奏時の連打速度
 上限はモニターのリフレッシュレートに依存
 0 でオート連打無効"""
@@ -528,6 +533,7 @@ config.EnableHitStatsPanelPatch = "Afficher le panneau de stats pendant la sessi
 config.EnableLouderSongPatch = "Autoriser les chansons de jouer un peu plus fort"
 config.EnableScoreRankIcon = "Afficher l'icône du Score Rank en jeu"
 config.EnableTatakonKeyboardSongSelect = "Sélection des chansons au TaTaCon/Clavier (instable)"
+config.UnsafeSkipLibTaikoCrcCheck = "Dangereux: ignorer le CRC de LibTaiko.dll et forcer le patch de capacite des mesures"
 config.AutoPlayRendaSpeed = """Vitesse des roul. tam. en mode Auto
 La vitesse max depend du taux de rafraîchissement de l'ecran.
 Mettre cette valeur à 0 désactive les roul. tam. en mode Auto."""
@@ -677,6 +683,7 @@ config.EnableHitStatsPanelPatch = "Mostra il pannello statistiche durante la ses
 config.EnableLouderSongPatch = "Permetti un volume brano piu alto"
 config.EnableScoreRankIcon = "Mostra l'icona di rango punteggio in gioco"
 config.EnableTatakonKeyboardSongSelect = "Selezione canzone con Tatakon/tastiera (instabile)"
+config.UnsafeSkipLibTaikoCrcCheck = "Pericoloso: ignora il CRC di LibTaiko.dll e forza la patch capacita misure"
 config.AutoPlayRendaSpeed = """Velocita del rullo in auto-play
 La velocita massima dipende dal refresh del monitor
 0 per disabilitare il rullo in auto-play"""
@@ -826,6 +833,7 @@ config.EnableHitStatsPanelPatch = "Trefferstatistik im Spiel anzeigen"
 config.EnableLouderSongPatch = "Etwas lauteren Song abspielen erlauben"
 config.EnableScoreRankIcon = "Score-Rang-Icon im Spiel anzeigen"
 config.EnableTatakonKeyboardSongSelect = "Songauswahl per Tatakon/Tastatur (instabil)"
+config.UnsafeSkipLibTaikoCrcCheck = "Gefahrlich: LibTaiko.dll-CRC uberspringen und Taktkapazitats-Patch erzwingen"
 config.AutoPlayRendaSpeed = """Wirbelgeschwindigkeit im Auto-Play
 Maximalwert hangt von der Bildwiederholrate ab
 0, um Auto-Wirbel zu deaktivieren"""
@@ -975,6 +983,7 @@ config.EnableHitStatsPanelPatch = "Mostrar panel de estadisticas durante la part
 config.EnableLouderSongPatch = "Permitir reproducir la cancion un poco mas alta"
 config.EnableScoreRankIcon = "Mostrar icono de rango de puntuacion en partida"
 config.EnableTatakonKeyboardSongSelect = "Elegir canciones con Tatakon/teclado (inestable)"
+config.UnsafeSkipLibTaikoCrcCheck = "Peligroso: saltar el CRC de LibTaiko.dll y forzar el patch de capacidad de compases"
 config.AutoPlayRendaSpeed = """Velocidad del redoble en auto-play
 La maxima depende del refresco del monitor
 0 para no hacer redobles en auto-play"""
@@ -1124,6 +1133,7 @@ config.EnableHitStatsPanelPatch = "啟用遊戲中音符統計面板"
 config.EnableLouderSongPatch = "允許播放更大聲的樂曲"
 config.EnableScoreRankIcon = "啟用遊戲中分數排名圖示"
 config.EnableTatakonKeyboardSongSelect = "啟用鍵盤版太鼓選曲（不穩定）"
+config.UnsafeSkipLibTaikoCrcCheck = "危險：跳過 LibTaiko.dll CRC 檢查並強制套用小節容量補丁"
 config.AutoPlayRendaSpeed = """自動遊玩模式的連打速度
 最大速度取決於顯示器更新率
 設為 0 可停用自動連打"""
@@ -1277,6 +1287,7 @@ config.EnableHitStatsPanelPatch = "플레이 중 명중률 패널 표시"
 config.EnableLouderSongPatch = "곡을 조금 더 크게 재생 허용"
 config.EnableScoreRankIcon = "플레이 중 점수 랭크 아이콘 표시"
 config.EnableTatakonKeyboardSongSelect = "타타콘/키보드로 곡 선택 (불안정)"
+config.UnsafeSkipLibTaikoCrcCheck = "위험: LibTaiko.dll CRC 검사를 건너뛰고 마디 용량 패치를 강제 적용"
 config.AutoPlayRendaSpeed = """오토 연타 속도
 최대 속도는 모니터 주사율에 따라 결정
 0 으로 설정하면 오토 연타를 하지 않음"""

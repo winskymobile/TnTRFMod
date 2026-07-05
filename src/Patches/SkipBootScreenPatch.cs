@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Reflection;
 using TnTRFMod.Config;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,17 +34,6 @@ internal class SkipBootScreenPatch
         skippable = true;
     }
 
-    [HarmonyPatch(typeof(BootImage))]
-    [HarmonyPatch(nameof(BootImage.PlayMovieAsync))]
-    [HarmonyPatch(MethodType.Normal)]
-    [HarmonyPrefix]
-    private static void BootImage_PlayMovieAsync_Prefix(BootImage __instance, ref bool skippable)
-    {
-        if (!ModConfig.EnableSkipBootScreenPatch.Value) return;
-        skippable = true;
-        __instance.MovieController.player.SetVolume(0);
-    }
-
     [HarmonyPatch(typeof(FadeCover))]
     [HarmonyPatch(nameof(FadeCover.FadeOutAsync))]
     [HarmonyPatch(MethodType.Normal)]
@@ -62,5 +52,33 @@ internal class SkipBootScreenPatch
     {
         if (!ModConfig.EnableSkipBootScreenPatch.Value) return;
         if (IsBootScene()) duration = 0f;
+    }
+}
+
+[HarmonyPatch]
+internal class SkipBootMoviePatch
+{
+    [HarmonyPrepare]
+    private static bool Prepare()
+    {
+        return PatchCompatibilityPolicy.ShouldPatchOptionalTarget(TargetMethod());
+    }
+
+    [HarmonyTargetMethod]
+    private static MethodBase? TargetMethod()
+    {
+        return typeof(BootImage).GetMethod("PlayMovieAsync",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+    }
+
+    [HarmonyPrefix]
+    private static void BootImage_PlayMovieAsync_Prefix(object __instance, ref bool skippable)
+    {
+        if (!ModConfig.EnableSkipBootScreenPatch.Value) return;
+        skippable = true;
+
+        var movieController = AccessTools.Property(__instance.GetType(), "MovieController")?.GetValue(__instance);
+        var player = movieController?.GetType().GetField("player")?.GetValue(movieController);
+        player?.GetType().GetMethod("SetVolume")?.Invoke(player, [0]);
     }
 }

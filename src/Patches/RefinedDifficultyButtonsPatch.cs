@@ -108,10 +108,11 @@ public class RefinedDifficultyButtonsPatch
         var sceneName = TnTrfMod.Instance.GetSceneName();
         switch (sceneName)
         {
+            case "SongSelectTraining":
             case "SongSelectTrainingFree":
             {
-                var sceneObj = GameObject.Find("SongSelectTrainingFreeSceneObjects")
-                    .GetComponent<SongSelectTrainingFreeSceneObjects>();
+                var sceneObj = GameObject.Find("SongSelectTrainingSceneObjects")
+                    .GetComponent<SongSelectTrainingSceneObjects>();
                 return sceneObj.UiController!;
             }
             case "SongSelectWar":
@@ -155,11 +156,11 @@ public class RefinedDifficultyButtonsPatch
                         uiController.UiDiffSelect2P.obis._items[i].obiIcon.enabled = false;
                     break;
                 }
-                case SongSelectTrainingFreeUiController trainUiController
+                case SongSelectTrainingUiController trainUiController
                     when trainUiController.selectedSong.Stars
                         [(int)trainUiController.diffSelect.GetHightlightedType()] != 0:
                     return true;
-                case SongSelectTrainingFreeUiController trainUiController:
+                case SongSelectTrainingUiController trainUiController:
                 {
                     for (var i = 0; i < trainUiController.UiDiffSelect.obis.Count; i++)
                         trainUiController.UiDiffSelect.obis._items[i].obiIcon.enabled = false;
