@@ -1,0 +1,162 @@
+name: Build BepInEx
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  CONFIGURATION: BepInEx
+  MOD_ASSEMBLY_NAME: net.stevexmh.TnTRFMod
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore tests
+        run: dotnet restore tests/TnTRFMod.Tests/TnTRFMod.Tests.csproj
+
+      - name: Run tests
+        run: dotnet test tests/TnTRFMod.Tests/TnTRFMod.Tests.csproj --no-restore
+
+  build-bepinex:
+    name: Build BepInEx package
+    needs: test
+    if: ${{ vars.TNTRF_GAME_DIR != '' || vars.TNTRF_INTEROP_ZIP_URL != '' }}
+    runs-on: ${{ vars.TNTRF_BUILD_RUNNER || 'windows-latest' }}
+
+    env:
+      TNTRF_GAME_DIR: ${{ vars.TNTRF_GAME_DIR }}
+      TNTRF_INTEROP_ZIP_URL: ${{ vars.TNTRF_INTEROP_ZIP_URL }}
+      TNTRF_INTEROP_ZIP_AUTH_HEADER: ${{ secrets.TNTRF_INTEROP_ZIP_AUTH_HEADER }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore TnTRFMod.csproj
+
+      - name: Prepare interop directory
+        id: interop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if ($env:TNTRF_GAME_DIR) {
+            $gameDir = $env:TNTRF_GAME_DIR
+            $interopDir = Join-Path $gameDir "BepInEx/interop"
+            if (-not (Test-Path $interopDir)) {
+              throw "TNTRF_GAME_DIR is set, but BepInEx/interop was not found: $interopDir"
+            }
+
+            "game-dir=$gameDir" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+
+          if (-not $env:TNTRF_INTEROP_ZIP_URL) {
+            throw "Set repository variable TNTRF_GAME_DIR or TNTRF_INTEROP_ZIP_URL to enable BepInEx builds."
+          }
+
+          $gameDir = Join-Path $env:RUNNER_TEMP "tntrf-game"
+          $interopDir = Join-Path $gameDir "BepInEx/interop"
+          New-Item -ItemType Directory -Force -Path $interopDir | Out-Null
+
+          $zipPath = Join-Path $env:RUNNER_TEMP "tntrf-interop.zip"
+          $headers = @{}
+          if ($env:TNTRF_INTEROP_ZIP_AUTH_HEADER) {
+            $name, $value = $env:TNTRF_INTEROP_ZIP_AUTH_HEADER -split ":", 2
+            if (-not $name -or -not $value) {
+              throw "TNTRF_INTEROP_ZIP_AUTH_HEADER must use 'Header-Name: header value' format."
+            }
+            $headers[$name.Trim()] = $value.Trim()
+          }
+
+          Invoke-WebRequest -Uri $env:TNTRF_INTEROP_ZIP_URL -Headers $headers -OutFile $zipPath
+          $extractDir = Join-Path $env:RUNNER_TEMP "tntrf-interop"
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+
+          $nestedInterop = Get-ChildItem -Path $extractDir -Directory -Recurse |
+            Where-Object { $_.FullName -replace "\\", "/" -match "/BepInEx/interop$" } |
+            Select-Object -First 1
+
+          if ($nestedInterop) {
+            Copy-Item -Path (Join-Path $nestedInterop.FullName "*.dll") -Destination $interopDir -Force
+          } else {
+            Copy-Item -Path (Join-Path $extractDir "*.dll") -Destination $interopDir -Force
+          }
+
+          $dllCount = (Get-ChildItem -Path $interopDir -Filter "*.dll" -File).Count
+          if ($dllCount -eq 0) {
+            throw "Interop zip did not contain any DLL files."
+          }
+
+          "game-dir=$gameDir" >> $env:GITHUB_OUTPUT
+
+      - name: Build BepInEx
+        shell: pwsh
+        run: |
+          dotnet build TnTRFMod.csproj `
+            --configuration $env:CONFIGURATION `
+            --no-restore `
+            "/p:GameDir=${{ steps.interop.outputs.game-dir }}" `
+            /p:CopyOutputFiles=false
+
+      - name: Package BepInEx build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $outputDir = "bin/$env:CONFIGURATION/net6.0"
+          $packageRoot = "artifacts/ci"
+          $packageDir = Join-Path $packageRoot $env:MOD_ASSEMBLY_NAME
+          New-Item -ItemType Directory -Force -Path $packageDir | Out-Null
+
+          Copy-Item -Path (Join-Path $outputDir "$env:MOD_ASSEMBLY_NAME.dll") -Destination $packageDir -Force
+          Copy-Item -Path (Join-Path $outputDir "$env:MOD_ASSEMBLY_NAME.deps.json") -Destination $packageDir -Force
+          Copy-Item -Path (Join-Path $outputDir "Tommy.dll") -Destination $packageDir -Force
+
+          $safeRefName = $env:GITHUB_REF_NAME -replace "[^A-Za-z0-9._-]", "-"
+          $shortSha = $env:GITHUB_SHA.Substring(0, 7)
+          $zipName = "TnTRFMod-BepInEx-$safeRefName-$shortSha.zip"
+          $zipPath = Join-Path "artifacts" $zipName
+          if (Test-Path $zipPath) {
+            Remove-Item $zipPath -Force
+          }
+
+          Compress-Archive -Path $packageDir -DestinationPath $zipPath -Force
+          "TNTRF_PACKAGE_PATH=$zipPath" >> $env:GITHUB_ENV
+          "TNTRF_PACKAGE_NAME=$zipName" >> $env:GITHUB_ENV
+
+      - name: Upload BepInEx package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.TNTRF_PACKAGE_NAME }}
+          path: ${{ env.TNTRF_PACKAGE_PATH }}
+          if-no-files-found: error
