@@ -20,6 +20,7 @@
         <Compile Include="../../src/Patches/LibTaikoPatchPolicy.cs" Link="LibTaikoPatchPolicy.cs"/>
         <Compile Include="../../src/ModVersionInfo.cs" Link="ModVersionInfo.cs"/>
         <Compile Include="../../src/Patches/PatchCompatibilityPolicy.cs" Link="PatchCompatibilityPolicy.cs"/>
+        <Compile Include="../../src/Patches/SkipRewardStateMachinePolicy.cs" Link="SkipRewardStateMachinePolicy.cs"/>
         <Compile Include="../../src/Scenes/Enso/HitStatsPanelPresentationPolicy.cs" Link="HitStatsPanelPresentationPolicy.cs"/>
         <Compile Include="../../src/Ui/SceneCanvasPolicy.cs" Link="SceneCanvasPolicy.cs"/>
     </ItemGroup>

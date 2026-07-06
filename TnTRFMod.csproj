@@ -83,8 +83,11 @@
 
     <ItemGroup>
         <Compile Remove="tests/**/*.cs"/>
+        <Compile Remove="TekaTeka/**/*.cs"/>
         <EmbeddedResource Remove="tests/**"/>
+        <EmbeddedResource Remove="TekaTeka/**"/>
         <None Remove="tests/**"/>
+        <None Remove="TekaTeka/**"/>
     </ItemGroup>
 
     <ItemGroup>

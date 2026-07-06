@@ -4,6 +4,7 @@
 
 using HarmonyLib;
 using System.Reflection;
+using TnTRFMod.Utils;
 
 #if BEPINEX
 
@@ -16,20 +17,39 @@ namespace TnTRFMod.Patches;
 [HarmonyPatch]
 internal class SkipRewardPatch
 {
+    private static readonly (Type OwnerType, int[] Suffixes)[] TargetStateMachines =
+    [
+        (typeof(ResultPlayer), [164, 163]),
+        (typeof(ResultPlayerScenario), [157]),
+        (typeof(ResultVsPlayer), [92])
+    ];
+
+    private static readonly HashSet<Type> WarnedMissingStateMembers = [];
+
     [HarmonyTargetMethods]
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        foreach (var suffix in new[] { 164, 163, 157, 92 })
+        foreach (var (ownerType, suffixes) in TargetStateMachines)
         {
-            var stateMachine = AccessTools.Inner(typeof(ResultPlayer), $"_ShowDonCoinAndRewardAsync_d__{suffix}");
-            var moveNext = AccessTools.Method(stateMachine, "MoveNext");
-            if (moveNext != null) yield return moveNext;
+            foreach (var suffix in suffixes)
+            {
+                var stateMachine = AccessTools.Inner(ownerType, $"_ShowDonCoinAndRewardAsync_d__{suffix}");
+                if (stateMachine == null) continue;
+
+                var moveNext = AccessTools.Method(stateMachine, "MoveNext");
+                if (moveNext != null) yield return moveNext;
+            }
         }
     }
 
     [HarmonyPrefix]
     public static void ResultPlayer_ShowDonCoinAndRewardAsync_MoveNext_Prefix(object __instance)
     {
-        AccessTools.Field(__instance.GetType(), "__1__state")?.SetValue(__instance, 2);
+        if (SkipRewardStateMachinePolicy.TryForceCompleted(__instance)) return;
+
+        var type = __instance.GetType();
+        if (!WarnedMissingStateMembers.Add(type)) return;
+
+        Logger.Warn($"SkipRewardPatch could not find a compatible state member on {type.FullName}; reward skip was not applied for this state machine.");
     }
 }
